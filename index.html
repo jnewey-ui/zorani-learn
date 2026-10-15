@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zorani — Learn a little every day</title>
+<style>
+:root { color-scheme: light dark; --green:#58cc02; --green-dark:#46a302; --blue:#1cb0f6; --gold:#ffc800; --red:#ff4b4b; --purple:#8b5cf6; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif; background:light-dark(#f7f8fa,#131a22); color:light-dark(#25313d,#f3f6f8); }
+#app { min-height:100vh; background-color:light-dark(#f7f8fa,#131a22); color:light-dark(#25313d,#f3f6f8); }
+header { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:18px clamp(16px,4vw,52px); border-bottom:2px solid light-dark(#e5e7eb,#2c3642); background:light-dark(#fff,#19232e); }
+.brand { font-size:1.45rem; font-weight:950; color:var(--green-dark); letter-spacing:-.04em; }
+.brand span { color:light-dark(#25313d,#f3f6f8); }
+.stats { display:flex; gap:12px; font-weight:850; }
+.stat { padding:8px 11px; border:2px solid light-dark(#e5e7eb,#36424f); border-radius:13px; white-space:nowrap; }
+main { width:min(960px,100%); margin:0 auto; padding:28px 18px 54px; }
+.layout { display:grid; grid-template-columns:minmax(0,1fr) 250px; gap:24px; align-items:start; }
+h1 { font-size:clamp(1.8rem,4vw,2.6rem); letter-spacing:-.045em; margin:0 0 8px; }
+.sub { color:light-dark(#667481,#b5c0ca); margin:0 0 22px; line-height:1.5; }
+.path { display:flex; align-items:center; gap:12px; margin:20px 0; }
+.node { width:74px; height:74px; border-radius:50%; display:grid; place-items:center; border:0; background:var(--green); color:white; box-shadow:0 5px 0 var(--green-dark); font-size:1.65rem; cursor:pointer; }
+.node.alt { background:var(--blue); box-shadow:0 5px 0 #1388c3; }
+.path-label { font-weight:900; }
+.card { background:light-dark(#fff,#1b2632); border:2px solid light-dark(#e5e7eb,#36424f); border-radius:22px; padding:24px; }
+.card h2 { margin:0 0 8px; font-size:1.35rem; }
+.mini { color:light-dark(#667481,#b5c0ca); font-size:.92rem; }
+.lesson-row { display:flex; gap:12px; align-items:center; margin-top:18px; padding:14px; border:2px solid light-dark(#e5e7eb,#36424f); border-radius:16px; }
+.lesson-icon { width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:light-dark(#eaf9dc,#28411b); font-size:1.35rem; }
+.lesson-row strong { display:block; }
+button { font:inherit; cursor:pointer; }
+.primary { width:100%; margin-top:18px; border:0; border-radius:15px; background:var(--green); color:white; font-weight:950; padding:15px 18px; box-shadow:0 4px 0 var(--green-dark); }
+.primary:hover { filter:brightness(1.04); }
+.primary:disabled { opacity:.45; cursor:not-allowed; }
+.side { display:grid; gap:16px; }
+.side .card { padding:18px; }
+.side h3 { margin:0 0 12px; }
+.progress-bg { height:12px; border-radius:20px; background:light-dark(#e5e7eb,#35414e); overflow:hidden; }
+.progress-fill { height:100%; width:0%; background:var(--green); transition:width .25s; }
+.word { font-size:1.65rem; font-weight:950; color:var(--green-dark); margin:8px 0; }
+.hidden { display:none !important; }
+.quiz-top { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:18px; }
+.question { font-size:1.5rem; font-weight:950; line-height:1.3; margin:20px 0; }
+.answers { display:grid; gap:10px; }
+.answer { text-align:left; border:2px solid light-dark(#d8dee5,#3b4957); border-radius:15px; padding:15px; background:light-dark(#fff,#1b2632); font-weight:800; color:inherit; }
+.answer:hover { background:light-dark(#f2fbe9,#263a2b); border-color:var(--green); }
+.answer.selected { border-color:var(--blue); background:light-dark(#e8f7ff,#153449); }
+.answer.correct { border-color:var(--green); background:light-dark(#eaf9dc,#28411b); }
+.answer.wrong { border-color:var(--red); background:light-dark(#fff0f0,#492525); }
+.feedback { padding:13px 15px; border-radius:14px; margin-top:16px; font-weight:800; }
+.feedback.good { background:light-dark(#eaf9dc,#28411b); color:light-dark(#246900,#b5ff8a); }
+.feedback.bad { background:light-dark(#fff0f0,#492525); color:light-dark(#a92727,#ffb2b2); }
+.quiz-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:18px; }
+.quiz-footer .primary { margin:0; width:auto; min-width:150px; }
+.back { border:0; background:transparent; color:light-dark(#667481,#b5c0ca); font-weight:850; padding:12px 0; }
+.result { text-align:center; padding:30px 10px; }
+.result-emoji { font-size:4rem; }
+.result h2 { font-size:2rem; }
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .side { grid-template-columns:1fr 1fr; } .stats { gap:5px; font-size:.88rem; } header { padding:14px; } .stat { padding:7px; } }
+@media(max-width:430px) { .side { grid-template-columns:1fr; } .brand { font-size:1.15rem; } }
+</style>
+</head>
+<body>
+<div id="app">
+<header><div class="brand">🌱 ZORANI <span>LEARN</span></div><div class="stats"><div class="stat">🔥 <b id="streak">1</b></div><div class="stat">⚡ <b id="xp">0</b> XP</div><div class="stat">❤️ <b id="hearts">5</b></div></div></header>
+<main>
+<div id="home">
+<h1>Ready for a quick lesson?</h1><p class="sub">Learn Zorani one small step at a time. Start with greetings and your first useful words.</p>
+<div class="layout"><section>
+<div class="path"><button class="node" aria-label="Start lesson" onclick="startLesson()">👋</button><div><div class="path-label">Unit 1: First words</div><div class="mini">Greetings · names · simple words</div></div></div>
+<div class="card"><h2>First words in Zorani</h2><p class="mini">Lesson 1 · about 3 minutes</p>
+<div class="lesson-row"><div class="lesson-icon">👋</div><div><strong>Greetings</strong><span class="mini">Say hello and greet a friend</span></div></div>
+<div class="lesson-row"><div class="lesson-icon">🧠</div><div><strong>Word practice</strong><span class="mini">Remember five starter words</span></div></div>
+<button class="primary" onclick="startLesson()">START LEARNING →</button></div>
+<div class="path"><button class="node alt" onclick="startLesson()">💬</button><div><div class="path-label">Next up: Tiny sentences</div><div class="mini">Unlock by practising today</div></div></div>
+</section><aside class="side"><div class="card"><h3>📈 Your progress</h3><div class="progress-bg"><div id="progress" class="progress-fill"></div></div><p class="mini" id="progressText">0 of 5 questions completed</p></div><div class="card"><h3>💡 Word of the day</h3><div class="word">Za</div><div class="mini">Hello</div><p class="mini">Try saying it aloud three times.</p></div><div class="card"><h3>🎯 Daily goal</h3><strong id="goalText">Earn 10 XP</strong><p class="mini">A few minutes of practice counts!</p></div></aside></div>
+</div>
+<div id="quiz" class="card hidden"><div class="quiz-top"><button class="back" onclick="goHome()">← Exit lesson</button><strong id="counter">Question 1 of 5</strong><strong>❤️ <span id="quizHearts">5</span></strong></div><div class="progress-bg"><div id="quizProgress" class="progress-fill"></div></div><div id="questionArea"><p class="mini">TRANSLATE THIS</p><div id="question" class="question">What does “Za” mean?</div><div id="answers" class="answers"></div><div id="feedback" class="feedback hidden"></div><div class="quiz-footer"><span class="mini" id="hint">Choose the best answer.</span><button id="checkBtn" class="primary" disabled onclick="checkAnswer()">CHECK</button></div></div><div id="result" class="result hidden"><div class="result-emoji">🏆</div><h2>Lesson complete!</h2><p id="resultText">You earned XP.</p><button class="primary" onclick="goHome()">BACK TO LEARNING</button><button class="back" onclick="startLesson()">Practise again ↻</button></div></div>
+</main></div>
+<script>
+const questions = [
+ {q:'What does “Za” mean?',opts:['Goodbye','Hello','Water'],correct:1,ex:'Za means “Hello” in Zorani.'},
+ {q:'How do you say “friend”?',opts:['Vena','Nako','Rima'],correct:0,ex:'Vena means “friend”.'},
+ {q:'What does “Nako” mean?',opts:['Sun','Food','Water'],correct:2,ex:'Nako means “water”.'},
+ {q:'Choose the meaning of “Mena rima.”',opts:['I am happy.','I am going.','Hello, friend.'],correct:0,ex:'Mena rima means “I am happy.”'},
+ {q:'How would you greet your friend Kazz?',opts:['Nako, Kazz!','Za, Kazz!','Rima, Kazz!'],correct:1,ex:'Za means “hello”, so “Za, Kazz!” means “Hello, Kazz!”'}
+];
+let index=0, selected=-1, checked=false, correctCount=0, xp=0, hearts=5, completed=0;
+const $=id=>document.getElementById(id);
+function startLesson(){index=0;selected=-1;checked=false;correctCount=0;hearts=5;$('hearts').textContent=hearts;$('quizHearts').textContent=hearts;$('home').classList.add('hidden');$('quiz').classList.remove('hidden');$('questionArea').classList.remove('hidden');$('result').classList.add('hidden');renderQuestion();}
+function renderQuestion(){let q=questions[index];selected=-1;checked=false;$('counter').textContent=`Question ${index+1} of ${questions.length}`;$('quizProgress').style.width=`${index/questions.length*100}%`;$('question').textContent=q.q;$('answers').innerHTML='';$('feedback').className='feedback hidden';$('feedback').textContent='';$('checkBtn').disabled=true;$('checkBtn').textContent='CHECK';$('hint').textContent='Choose the best answer.';q.opts.forEach((o,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'.  '+o;b.onclick=()=>selectAnswer(i);$('answers').appendChild(b)});}
+function selectAnswer(i){if(checked)return;selected=i;[...$('answers').children].forEach((b,j)=>b.classList.toggle('selected',i===j));$('checkBtn').disabled=false;}
+function checkAnswer(){if(!checked){checked=true;let q=questions[index],right=selected===q.correct;[...$('answers').children].forEach((b,j)=>{if(j===q.correct)b.classList.add('correct');else if(j===selected)b.classList.add('wrong');b.disabled=true});if(right){correctCount++;xp+=10;$('xp').textContent=xp;$('feedback').className='feedback good';$('feedback').textContent='✓ Correct! '+q.ex;}else{hearts=Math.max(0,hearts-1);$('hearts').textContent=hearts;$('quizHearts').textContent=hearts;$('feedback').className='feedback bad';$('feedback').textContent='Not quite. '+q.ex;} $('checkBtn').textContent=index===questions.length-1?'FINISH':'CONTINUE';$('hint').textContent=right?'+10 XP':'Keep going — mistakes help you learn!';$('quizProgress').style.width=`${(index+1)/questions.length*100}%`;completed=Math.max(completed,index+1);$('progress').style.width=`${completed/questions.length*100}%`;$('progressText').textContent=`${completed} of ${questions.length} questions completed`;if(xp>=10)$('goalText').textContent='Daily goal reached! 🎉';return;}if(index<questions.length-1){index++;renderQuestion()}else{showResult()}}
+function showResult(){$('questionArea').classList.add('hidden');$('result').classList.remove('hidden');$('resultText').textContent=`You got ${correctCount} out of ${questions.length} correct and earned ${correctCount*10} XP. ${correctCount===questions.length?'Perfect score — amazing work!':'Review the words, then try again to improve your score.'}`;$('quizProgress').style.width='100%';}
+function goHome(){$('quiz').classList.add('hidden');$('home').classList.remove('hidden');}
+</script>
+</body>
+</html>
